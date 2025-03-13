@@ -6,68 +6,110 @@
     <title>Mobile Website Viewer for OBS</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f3f4f6;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+        }
+        
+        .input-container {
+            background-color: white;
+            border-radius: 8px;
             padding: 20px;
-            min-height: 100vh;
-            margin: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         
         .controls {
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 500px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
-        #url-input {
+        input {
             flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 10px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            min-width: 200px;
         }
         
-        #load-button {
-            padding: 10px 15px;
-            background-color: #4285f4;
+        button {
+            background-color: #2563eb;
             color: white;
+            padding: 10px 16px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-weight: 500;
             cursor: pointer;
         }
         
-        #load-button:hover {
-            background-color: #3b77db;
+        button:hover {
+            background-color: #1d4ed8;
         }
         
         .phone-container {
-            position: relative;
-            width: 375px;
-            height: 812px;
-            background-color: #111;
-            border-radius: 40px;
-            padding: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
         
-        .phone-screen {
+        .iphone-frame {
+            width: 375px;
+            height: 812px;
+            background-color: #111827;
+            border-radius: 40px;
             position: relative;
-            width: 100%;
-            height: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .iphone-screen {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
             background-color: white;
             border-radius: 30px;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
         
-        .notch {
+        .iphone-notch {
             position: absolute;
             width: 150px;
             height: 30px;
-            background-color: #111;
+            background-color: #111827;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
@@ -76,76 +118,239 @@
             z-index: 10;
         }
         
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        .iphone-home-indicator {
+            position: absolute;
+            width: 120px;
+            height: 5px;
+            background-color: #111827;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 9999px;
         }
         
-        .info {
+        .screen-content {
+            padding: 20px;
+            color: #4b5563;
+        }
+        
+        .url-text {
+            font-size: 16px;
+            word-break: break-all;
+            margin-bottom: 20px;
+        }
+        
+        .instructions {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #1e40af;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .step {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .note {
             margin-top: 20px;
             padding: 15px;
-            border-radius: 5px;
-            background-color: #e6f7ff;
-            border: 1px solid #91d5ff;
-            max-width: 500px;
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            border-radius: 8px;
+            color: #991b1b;
+        }
+        
+        .template-window {
+            margin-top: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .window-header {
+            background-color: #f3f4f6;
+            padding: 8px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+        }
+        
+        .window-buttons {
+            display: flex;
+            gap: 6px;
+            margin-right: 12px;
+        }
+        
+        .window-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .window-button.red {
+            background-color: #ef4444;
+        }
+        
+        .window-button.yellow {
+            background-color: #f59e0b;
+        }
+        
+        .window-button.green {
+            background-color: #10b981;
+        }
+        
+        .window-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .window-content {
+            padding: 16px;
+            background-color: white;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            color: #374151;
+        }
+        
+        #dimension-info {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #6b7280;
         }
     </style>
 </head>
 <body>
-    <h1>Mobile Website Viewer for OBS</h1>
-    
-    <div class="controls">
-        <input type="text" id="url-input" placeholder="Enter website URL (e.g., http://localhost:5678/workflow)" value="http://localhost:5678/workflow">
-        <button id="load-button">Load URL</button>
-    </div>
-    
-    <div class="phone-container">
-        <div class="notch"></div>
-        <div class="phone-screen">
-            <iframe id="website-frame" src="about:blank"></iframe>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Mobile Website Viewer for OBS</h1>
+            <p class="subtitle">Alternative approach for viewing mobile websites</p>
         </div>
-    </div>
-    
-    <div class="info">
-        <h3>Tips for OBS:</h3>
-        <ul>
-            <li>Add this page as a "Browser Source" or "Window Capture" in OBS</li>
-            <li>Crop as needed to show just the phone frame</li>
-            <li>For localhost URLs, enter them exactly as shown in your browser</li>
-            <li>If your localhost app has CORS restrictions, you may need to disable them</li>
-        </ul>
+        
+        <div class="instructions">
+            <h3>How to view localhost in a mobile frame for OBS:</h3>
+            
+            <p class="step">Option 1: Direct Chrome Method (Recommended)</p>
+            <ol>
+                <li>Open Chrome and navigate to your site (e.g., <code>http://localhost:5678/workflow</code>)</li>
+                <li>Press <strong>F12</strong> to open Developer Tools</li>
+                <li>Click the <strong>Toggle Device Toolbar</strong> button (or press <strong>Ctrl+Shift+M</strong>)</li>
+                <li>Select <strong>iPhone 12 Pro</strong> from the device dropdown</li>
+                <li>Now capture this window in OBS</li>
+            </ol>
+            
+            <p class="step">Option 2: Using a Browser Profile</p>
+            <ol>
+                <li>Create a new Chrome window with: <code>--user-data-dir=C:\mobile-chrome --window-size=375,812</code></li>
+                <li>Navigate to your website</li>
+                <li>Capture this window in OBS</li>
+            </ol>
+        </div>
+        
+        <div class="input-container">
+            <div class="controls">
+                <input type="text" id="width-input" value="375" placeholder="Width (px)">
+                <input type="text" id="height-input" value="812" placeholder="Height (px)">
+                <button id="generate-button">Generate Command</button>
+            </div>
+            <div id="dimension-info">iPhone 12 Pro dimensions (375×812px)</div>
+        </div>
+        
+        <div class="template-window">
+            <div class="window-header">
+                <div class="window-buttons">
+                    <div class="window-button red"></div>
+                    <div class="window-button yellow"></div>
+                    <div class="window-button green"></div>
+                </div>
+                <div class="window-title">Command to Run</div>
+            </div>
+            <div class="window-content" id="command-output">chrome --user-data-dir=C:\mobile-chrome --window-size=375,812</div>
+        </div>
+        
+        <div class="phone-container">
+            <div class="iphone-frame">
+                <div class="iphone-notch"></div>
+                <div class="iphone-screen">
+                    <div class="screen-content">
+                        <h3>Localhost Viewing Instructions</h3>
+                        <p>For security reasons, websites (especially localhost) cannot be directly embedded in iframes on most browsers.</p>
+                        <p>Please use one of the options above to view your localhost application in mobile format.</p>
+                    </div>
+                </div>
+                <div class="iphone-home-indicator"></div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <p><strong>Note about iframe limitations:</strong> Browser security restrictions often prevent embedding localhost content in iframes. The methods above are more reliable for capturing localhost content in OBS.</p>
+        </div>
     </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const urlInput = document.getElementById('url-input');
-            const loadButton = document.getElementById('load-button');
-            const iframe = document.getElementById('website-frame');
+            const widthInput = document.getElementById('width-input');
+            const heightInput = document.getElementById('height-input');
+            const generateButton = document.getElementById('generate-button');
+            const commandOutput = document.getElementById('command-output');
+            const dimensionInfo = document.getElementById('dimension-info');
             
-            // Load the initial URL if provided
-            if (urlInput.value) {
-                iframe.src = urlInput.value;
-            }
-            
-            // Load URL when button is clicked
-            loadButton.addEventListener('click', function() {
-                let url = urlInput.value.trim();
+            const updateCommand = function() {
+                const width = widthInput.value.trim() || '375';
+                const height = heightInput.value.trim() || '812';
                 
-                // Add http:// if missing and not about:blank
-                if (url && !url.startsWith('http://') && !url.startsWith('https://') && url !== 'about:blank') {
-                    url = 'http://' + url;
-                    urlInput.value = url;
+                commandOutput.textContent = `chrome --user-data-dir=C:\\mobile-chrome --window-size=${width},${height}`;
+                
+                // Update dimension info
+                let deviceName = "";
+                if (width == "375" && height == "812") {
+                    deviceName = "iPhone 12 Pro dimensions";
+                } else if (width == "414" && height == "896") {
+                    deviceName = "iPhone 11 Pro Max dimensions";
+                } else if (width == "360" && height == "800") {
+                    deviceName = "Samsung Galaxy S20 dimensions";
+                } else {
+                    deviceName = "Custom dimensions";
                 }
                 
-                // Load the URL in the iframe
-                iframe.src = url;
+                dimensionInfo.textContent = `${deviceName} (${width}×${height}px)`;
+            };
+            
+            // Set initial values
+            updateCommand();
+            
+            // Update when button clicked
+            generateButton.addEventListener('click', updateCommand);
+            
+            // Update when enter pressed in inputs
+            widthInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    updateCommand();
+                }
             });
             
-            // Also load when pressing Enter in the input
-            urlInput.addEventListener('keypress', function(e) {
+            heightInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    loadButton.click();
+                    updateCommand();
                 }
             });
         });
